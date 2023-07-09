@@ -61,7 +61,7 @@ class LexerTest {
         assertEquals(List.of(
             new Ident("getRawAddr"),
             new Fixed(TokenType.LeftBracket),
-            new CellRef(3, 1),
+            new CellRef(3, 0),
             new Fixed(TokenType.RightBracket)
         ), tokens);
     }
@@ -70,7 +70,7 @@ class LexerTest {
     void barelyPassingCellRef() throws LexerException {
         var tokens = new Lexer("=ZZZZZZ99999999").toTokens();
         assertEquals(List.of(
-            new CellRef(99999998, 308915776)
+            new CellRef(99999998, 321272405)
         ), tokens);
     }
 

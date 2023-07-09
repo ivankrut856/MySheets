@@ -27,7 +27,7 @@ public class AstParser {
                         case RightBracket -> {
                             while (!delayed.empty() && delayed.peek().getType() != Lexer.TokenType.LeftBracket)
                                 rpn.add(delayed.pop());
-                            if (delayed.peek().getType() != Lexer.TokenType.LeftBracket)
+                            if (delayed.empty() || delayed.peek().getType() != Lexer.TokenType.LeftBracket)
                                 throw new ParseException("Unmatched right bracket");
                             delayed.pop();
                             if (!delayed.empty() && delayed.peek().getType() == Lexer.TokenType.Ident)

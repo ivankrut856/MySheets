@@ -1,6 +1,6 @@
 package com.example.sheets;
 
-import com.example.sheets.expression.parser.menu.MenuBar;
+import com.example.sheets.menu.MenuBar;
 import com.example.sheets.table.TablePanel;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ public class MainFrame extends JFrame {
         setIconImage(icon.getImage());
         getContentPane().setBackground(new Color(0x123456));
 
-        var table = new TablePanel(100, 27);
+        var table = new TablePanel(8, 3);
         add(table);
         setJMenuBar(new MenuBar(table));
 

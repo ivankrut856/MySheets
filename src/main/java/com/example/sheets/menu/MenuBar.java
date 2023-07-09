@@ -1,4 +1,4 @@
-package com.example.sheets.expression.parser.menu;
+package com.example.sheets.menu;
 
 import com.example.sheets.table.TablePanel;
 

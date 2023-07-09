@@ -41,9 +41,6 @@
                 <version>1.2.1</version>
                 <configuration>
                     <mainClass>com.example.sheets.Application</mainClass>
-<!--                    <arguments>-->
-<!--                        <argument>&#45;&#45;enable-preview</argument>-->
-<!--                    </arguments>-->
                 </configuration>
             </plugin>
         </plugins>
@@ -54,6 +51,12 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.jqwik</groupId>
+            <artifactId>jqwik</artifactId>
+            <version>1.7.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>

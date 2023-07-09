@@ -20,6 +20,8 @@ public class CellStore {
     private int columnCount;
 
     private final CellWithDependants DEFAULT_CELL;
+    private final int MIN_ROW_COUNT = 2;
+    private final int MIN_COLUMN_COUNT = 2;
 
     public CellStore(int rowCount, int columnCount) {
         this.rowCount = rowCount;
@@ -74,7 +76,7 @@ public class CellStore {
     }
 
     public boolean isValid(CellAddress address) {
-        return !(address.row() < 0 || address.row() >= rowCount || address.column() < 1 || address.column() >= columnCount);
+        return !(address.row() < 0 || address.row() >= rowCount || address.column() < 0 || address.column() >= columnCount);
     }
 
     public Cell set(CellAddress address, String formula) {
@@ -105,9 +107,9 @@ public class CellStore {
 
     public void shrink(int rowNumber, int columnNumber) {
         rowCount -= rowNumber;
-        rowCount = Math.max(rowCount, 1);
+        rowCount = Math.max(rowCount, MIN_ROW_COUNT);
         columnCount -= columnNumber;
-        columnCount = Math.max(columnCount, 2);
+        columnCount = Math.max(columnCount, MIN_COLUMN_COUNT);
         var toRemove = data.keySet().stream().filter(a -> !isValid(a)).toList();
         toRemove.forEach(data::remove);
     }

@@ -1,5 +1,7 @@
 package com.example.sheets.expression.parser.lexer;
 
+import com.example.sheets.expression.parser.LetterIndexUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -108,16 +110,14 @@ public class Lexer {
     private static final int CellRef26Limit = 6;
 
     private Token parseCellRef() throws LexerException {
-        int columnIdx = 0, rowIdx = 0;
-
+        int rowIdx = 0;
         current--;
 
+        var sb = new StringBuilder();
         for (int sectionLength = 0;
              sectionLength < CellRef26Limit && !isEndOfString() && 'A' <= getNext() && getNext() <= 'Z';
              sectionLength++) {
-            int i = next() - 'A';
-            columnIdx *= 26;
-            columnIdx += i;
+            sb.append(next());
         }
 
         for (int sectionLength = 0;
@@ -130,7 +130,7 @@ public class Lexer {
 
         if (!isEndOfString() && Character.isLetterOrDigit(getNext()))
             throw new InvalidCellReference("Unexpected symbol %s at position %d".formatted(getNext(), current));
-        return new CellRef(rowIdx - 1, columnIdx + 1);
+        return new CellRef(rowIdx - 1, LetterIndexUtil.toNumberIndex(sb.toString()) - 1);
     }
 
     private String parseIdent() {

@@ -35,7 +35,7 @@ public class TablePanel extends JPanel {
             public void editingStopped(ChangeEvent e) {
                 super.editingStopped(e);
                 var rowIndex = getSelectedRow() + 1;
-                if (rowIndex >= rowCount)
+                if (rowIndex >= getRowCount())
                     rowIndex = 0;
                 var columnIndex = getSelectedColumn();
                 changeSelection(rowIndex, columnIndex, false, false);
@@ -53,7 +53,6 @@ public class TablePanel extends JPanel {
         });
         var headTable = new JTable(tableModel, columnModelHead);
 
-//        bodyTable.createDefaultColumnsFromModel();
         bodyTable.setAutoCreateColumnsFromModel(true);
         headTable.createDefaultColumnsFromModel();
 

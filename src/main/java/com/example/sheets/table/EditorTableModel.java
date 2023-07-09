@@ -1,5 +1,6 @@
 package com.example.sheets.table;
 
+import com.example.sheets.expression.parser.LetterIndexUtil;
 import com.example.sheets.expression.parser.ast.NodeValue;
 import com.example.sheets.table.cell.CellAddress;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,8 +25,7 @@ public class EditorTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        System.out.println("GCC!!!");
-        return cellManager.getColumnCount();
+        return cellManager.getColumnCount() + 1;
     }
 
     @Override
@@ -34,26 +34,15 @@ public class EditorTableModel extends AbstractTableModel {
             return String.valueOf(rowIndex + 1);
 
         if (selectedRow == rowIndex && selectedColumn == columnIndex)
-            return cellManager.getFormula(new CellAddress(rowIndex, columnIndex));
-        return cellManager.getVisibleValue(new CellAddress(rowIndex, columnIndex));
+            return cellManager.getFormula(new CellAddress(rowIndex, columnIndex - 1));
+        return cellManager.getVisibleValue(new CellAddress(rowIndex, columnIndex - 1));
     }
 
     @Override
     public String getColumnName(int column) {
         if (column == 0)
             return "\\";
-
-        column--;
-        if (column == 0)
-            return "A";
-
-        var sb = new StringBuilder();
-        while (column > 0) {
-            sb.append((char) ((column % 26) + 'A'));
-            column /= 26;
-        }
-
-        return sb.reverse().toString();
+        return LetterIndexUtil.toLetterIndex(column);
     }
 
     @Override
@@ -65,16 +54,16 @@ public class EditorTableModel extends AbstractTableModel {
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if (!(aValue instanceof String formula))
             return;
-        if (rowIndex < 0 || rowIndex >= cellManager.getRowCount() || columnIndex < 1 || columnIndex >= cellManager.getColumnCount())
+        if (rowIndex < 0 || rowIndex >= getRowCount() || columnIndex < 1 || columnIndex >= getColumnCount())
             return;
 
         var updateResult = cellManager.setValue(
-            new CellAddress(rowIndex, columnIndex),
+            new CellAddress(rowIndex, columnIndex - 1),
             formula
         );
 
         for (var address : updateResult.invalidated()) {
-            fireTableCellUpdated(address.row(), address.column());
+            fireTableCellUpdated(address.row(), address.column() + 1);
         }
     }
 
@@ -89,11 +78,11 @@ public class EditorTableModel extends AbstractTableModel {
     }
 
     public void onRightClick(int rowIndex, int columnIndex) {
-        if (rowIndex < 0 || rowIndex >= cellManager.getRowCount() || columnIndex < 1 || columnIndex >= cellManager.getRowCount())
+        if (rowIndex < 0 || rowIndex >= getRowCount() || columnIndex < 1 || columnIndex >= getColumnCount())
             return;
 
-        System.out.println("RC: %d;%d".formatted(rowIndex, columnIndex));
-        if (cellManager.getValue(new CellAddress(rowIndex, columnIndex)) instanceof NodeValue.Error e) {
+        System.out.println("RC: %d;%d".formatted(rowIndex, columnIndex - 1));
+        if (cellManager.getValue(new CellAddress(rowIndex, columnIndex - 1)) instanceof NodeValue.Error e) {
             JOptionPane.showMessageDialog(null, e.message(), "Cell's erroneous", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -102,6 +91,7 @@ public class EditorTableModel extends AbstractTableModel {
         try {
             cellManager.load(json);
             fireTableDataChanged();
+            fireTableStructureChanged();
         } catch (JsonProcessingException e) {
             JOptionPane.showMessageDialog(
                 null,
