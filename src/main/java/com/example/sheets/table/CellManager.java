@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.text.DecimalFormat;
 import java.util.*;
 
-public class CellManager {
+public final class CellManager {
     public record UpdateResult(Set<CellAddress> invalidated) {
     }
 
@@ -145,8 +145,8 @@ public class CellManager {
             for (int j = 0; j < oldColumnCount; j++) {
                 var cellAddress = new CellAddress(i, j);
                 if (cells.getCell(cellAddress).getReferences().stream().anyMatch(addr ->
-                    addr.rowIndex() >= oldRowCount && addr.rowIndex() < rowCount ||
-                        addr.columnIndex() >= oldColumnCount && addr.columnIndex() < columnCount)) {
+                    addr.rowIndex() >= oldRowCount && addr.rowIndex() < rowCount
+                        || addr.columnIndex() >= oldColumnCount && addr.columnIndex() < columnCount)) {
                     toInvalidateFirst.add(cellAddress);
                 }
             }
@@ -165,8 +165,8 @@ public class CellManager {
             for (int j = 0; j < columnCount; j++) {
                 var cellAddress = new CellAddress(i, j);
                 if (cells.getCell(cellAddress).getReferences().stream().anyMatch(addr ->
-                    addr.rowIndex() >= rowCount && addr.rowIndex() < oldRowCount ||
-                        addr.columnIndex() >= columnCount && addr.columnIndex() < oldColumnCount)) {
+                    addr.rowIndex() >= rowCount && addr.rowIndex() < oldRowCount
+                        || addr.columnIndex() >= columnCount && addr.columnIndex() < oldColumnCount)) {
                     toInvalidateFirst.add(cellAddress);
                 }
             }

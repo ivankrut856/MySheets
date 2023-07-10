@@ -10,7 +10,7 @@ import com.example.sheets.expression.parser.lexer.LexerException;
 import java.util.*;
 import java.util.function.Function;
 
-public class Cell {
+public final class Cell {
 
     private final String formula;
     private final AstNode ast;

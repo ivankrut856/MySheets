@@ -12,13 +12,15 @@ import java.nio.file.Files;
 import static java.awt.event.MouseEvent.BUTTON3;
 import static java.nio.file.StandardOpenOption.*;
 
-public class TablePanel extends JPanel {
+public final class TablePanel extends JPanel {
 
     private final EditorTableModel tableModel;
+    private final int MINIMUM_WIDTH = 150;
+    private final int MINIMUM_HEIGHT = 150;
 
     public TablePanel(int rowCount, int columnCount) {
 
-        setMinimumSize(new Dimension(150, 150));
+        setMinimumSize(new Dimension(MINIMUM_WIDTH, MINIMUM_HEIGHT));
 
         tableModel = new EditorTableModel(rowCount, columnCount);
         var columnModel = new SkipFirstColumnModel();
@@ -89,6 +91,8 @@ public class TablePanel extends JPanel {
 
     public void save(File file) throws IOException {
         var saveInfo = tableModel.save();
+        if (saveInfo == null)
+            return;
         Files.writeString(file.toPath(), saveInfo, WRITE, TRUNCATE_EXISTING, CREATE);
     }
 

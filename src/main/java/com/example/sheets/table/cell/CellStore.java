@@ -8,7 +8,7 @@ import com.google.common.collect.HashBiMap;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CellStore {
+public final class CellStore {
 
     record CellWithDependants(Cell cell, Set<CellAddress> dependants) {
     }

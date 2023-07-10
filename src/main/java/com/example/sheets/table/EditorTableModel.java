@@ -8,7 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
-public class EditorTableModel extends AbstractTableModel {
+public final class EditorTableModel extends AbstractTableModel {
 
     private int selectedRow = -1;
     private int selectedColumn = -1;

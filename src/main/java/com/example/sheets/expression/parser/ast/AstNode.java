@@ -1,11 +1,9 @@
 package com.example.sheets.expression.parser.ast;
 
 import com.example.sheets.expression.parser.lexer.Lexer;
-import org.w3c.dom.Node;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -33,7 +31,7 @@ public sealed interface AstNode permits
     record UnaryOp(AstNode operand, UnaryOperator<NodeValue> operator) implements AstNode {
 
         @Override
-        public NodeValue getValue(Function<Reference.Address, NodeValue> memory) {
+        public NodeValue getValue(final Function<Reference.Address, NodeValue> memory) {
             return operator.apply(operand.getValue(memory));
         }
 
@@ -128,8 +126,6 @@ public sealed interface AstNode permits
             return Collections.emptySet();
         }
     }
-
-
 }
 
 

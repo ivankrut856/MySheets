@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
 
-public class MenuBar extends JMenuBar {
+public final class MenuBar extends JMenuBar {
 
     public MenuBar(TablePanel table) {
         var fileMenu = new JMenu("File");

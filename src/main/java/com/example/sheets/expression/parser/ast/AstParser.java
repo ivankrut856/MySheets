@@ -6,12 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
-import java.util.function.Function;
 
 import static com.example.sheets.expression.parser.ast.Bodies.*;
 
-public class AstParser {
-
+public final class AstParser {
     public static AstNode parse(List<Lexer.Token> tokens) throws ParseException {
         Stack<Lexer.Token> delayed = new Stack<>();
         List<Lexer.Token> rpn = new ArrayList<>();
@@ -34,17 +32,17 @@ public class AstParser {
                                 rpn.add(delayed.pop());
                         }
                         case Comma -> {
-                            while (!delayed.empty() &&
-                                delayed.peek().getType() != Lexer.TokenType.LeftBracket && delayed.peek().getType() != Lexer.TokenType.Comma) {
+                            while (!delayed.empty()
+                                && delayed.peek().getType() != Lexer.TokenType.LeftBracket && delayed.peek().getType() != Lexer.TokenType.Comma) {
                                 rpn.add(delayed.pop());
                             }
                         }
                         case Plus, Minus, Asterisk, Slash -> {
                             if (x.getType() == Lexer.TokenType.Minus && (i == 0 || !isOperand(tokens.get(i - 1).getType())))
                                 x.setUnary(true);
-                            while (!delayed.empty() &&
-                                delayed.peek().getType() != Lexer.TokenType.LeftBracket &&
-                                delayed.peek().getPrecedence() >= x.getPrecedence()) {
+                            while (!delayed.empty()
+                                && delayed.peek().getType() != Lexer.TokenType.LeftBracket
+                                && delayed.peek().getPrecedence() >= x.getPrecedence()) {
                                 rpn.add(delayed.pop());
                             }
                             delayed.push(x);
@@ -100,9 +98,9 @@ public class AstParser {
                     }
                 }
                 case Lexer.Ident x -> {
-                    if (!builtIns.containsKey(x.getValue()))
+                    if (!BUILT_INS.containsKey(x.getValue()))
                         throw new ParseException("Unknown symbol %s".formatted(x.getValue()));
-                    var functionDecl = Bodies.builtIns.get(x.getValue());
+                    var functionDecl = Bodies.BUILT_INS.get(x.getValue());
                     var args = new ArrayList<AstNode>();
                     for (int i = 0; i < functionDecl.arity(); i++)
                         args.add(popOrThrow(nodes));
@@ -133,6 +131,6 @@ public class AstParser {
             case default -> false;
         };
     }
-
-
+    private AstParser() {
+    }
 }

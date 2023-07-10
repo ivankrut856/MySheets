@@ -6,7 +6,7 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-public class Bodies {
+public final class Bodies {
 
     public record FunctionDecl(int arity, Function<List<NodeValue>, NodeValue> body) {
     }
@@ -41,7 +41,7 @@ public class Bodies {
     public static final Function<List<NodeValue>, NodeValue> POW_BODY =
         (List<NodeValue> args) -> numberBinaryOperator(args.get(0), args.get(1), Math::pow);
 
-    public static final Map<String, FunctionDecl> builtIns = Map.ofEntries(
+    public static final Map<String, FunctionDecl> BUILT_INS = Map.ofEntries(
         Map.entry("sin", new FunctionDecl(1, SIN_BODY)),
         Map.entry("max", new FunctionDecl(2, MAX_BODY)),
         Map.entry("substr", new FunctionDecl(3, SUBSTR_BODY)),
@@ -91,5 +91,8 @@ public class Bodies {
             case default -> x.toString();
         };
         return new NodeValue.Error("Expected %s, but got %s".formatted(expectedType, actualValueRepr));
+    }
+
+    private Bodies() {
     }
 }

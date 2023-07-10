@@ -8,7 +8,7 @@ import java.util.List;
 
 import static com.example.sheets.expression.parser.lexer.Lexer.TokenType.*;
 
-public class Lexer {
+public final class Lexer {
 
     private String s;
     private ArrayList<Token> tokens;
@@ -95,8 +95,8 @@ public class Lexer {
     }
 
     private String parseString() throws LexerException {
-        while (!isEndOfString() &&
-            (getNext() != '"' || current > start + 1 && s.charAt(current - 1) == '\\')) {
+        while (!isEndOfString()
+            && (getNext() != '"' || current > start + 1 && s.charAt(current - 1) == '\\')) {
             next();
         }
         if (isEndOfString())
@@ -106,8 +106,8 @@ public class Lexer {
         return s.substring(start + 1, current - 1).replace("\\\"", "\"");
     }
 
-    private static final int CellRef10Limit = 8;
-    private static final int CellRef26Limit = 6;
+    private static final int ROW_INDEX_LENGTH_LIMIT = 8;
+    private static final int COLUMN_INDEX_LENGTH_LIMIT = 6;
 
     private Token parseCellRef() throws LexerException {
         int rowIdx = 0;
@@ -115,13 +115,13 @@ public class Lexer {
 
         var sb = new StringBuilder();
         for (int sectionLength = 0;
-             sectionLength < CellRef26Limit && !isEndOfString() && 'A' <= getNext() && getNext() <= 'Z';
+             sectionLength < COLUMN_INDEX_LENGTH_LIMIT && !isEndOfString() && 'A' <= getNext() && getNext() <= 'Z';
              sectionLength++) {
             sb.append(next());
         }
 
         for (int sectionLength = 0;
-             sectionLength < CellRef10Limit && !isEndOfString() && isArabicNumeral(getNext());
+             sectionLength < ROW_INDEX_LENGTH_LIMIT && !isEndOfString() && isArabicNumeral(getNext());
              sectionLength++) {
             int i = next() - '0';
             rowIdx *= 10;
@@ -170,7 +170,7 @@ public class Lexer {
         }
     }
 
-    public sealed static abstract class Token permits Fixed, Ident, CellRef, Literal {
+    public abstract static sealed class Token permits Fixed, Ident, CellRef, Literal {
         protected TokenType type;
 
         Token(TokenType type) {
@@ -190,7 +190,7 @@ public class Lexer {
         Plus, Minus, Slash, Asterisk, LeftBracket, RightBracket, Comma, Ident, CellRef, Literal
     }
 
-    public final static class Fixed extends Token {
+    public static final class Fixed extends Token {
 
         private boolean unary = false;
 
