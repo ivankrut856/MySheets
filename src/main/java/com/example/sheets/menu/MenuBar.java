@@ -1,6 +1,7 @@
 package com.example.sheets.menu;
 
 import com.example.sheets.table.TablePanel;
+import com.example.sheets.table.cell.CellStore;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -75,11 +76,11 @@ public class MenuBar extends JMenuBar {
     }
 
     private void extendTableHandler(ActionEvent e, TablePanel table) {
-        var rowNumber = new SpinnerNumberModel(0, 0, 1_000, 1);
-        var columnNumber = new SpinnerNumberModel(0, 0, 1_000, 1);
+        var rowNumber = new SpinnerNumberModel(0, 0, CellStore.MAX_ROW_COUNT, 1);
+        var columnNumber = new SpinnerNumberModel(0, 0, CellStore.MAX_COLUMN_COUNT, 1);
         Object[] message = {
-            "Add rows (1000 max):", new JSpinner(rowNumber),
-            "Add columns (1000 max):", new JSpinner(columnNumber)
+            "Add rows (%d max total):".formatted(CellStore.MAX_ROW_COUNT), new JSpinner(rowNumber),
+            "Add columns (%d max total):".formatted(CellStore.MAX_COLUMN_COUNT), new JSpinner(columnNumber)
         };
 
         int option = JOptionPane.showConfirmDialog(null, message, "Extend table", JOptionPane.OK_CANCEL_OPTION);
@@ -90,11 +91,11 @@ public class MenuBar extends JMenuBar {
     }
 
     private void shrinkTableHandler(ActionEvent e, TablePanel table) {
-        var rowNumber = new SpinnerNumberModel(0, 0, 1_000, 1);
-        var columnNumber = new SpinnerNumberModel(0, 0, 1_000, 1);
+        var rowNumber = new SpinnerNumberModel(0, 0, CellStore.MAX_ROW_COUNT, 1);
+        var columnNumber = new SpinnerNumberModel(0, 0, CellStore.MIN_COLUMN_COUNT, 1);
         Object[] message = {
-            "Remove rows (1000 max):", new JSpinner(rowNumber),
-            "Remove columns (1000 max):", new JSpinner(columnNumber)
+            "Remove rows (%d min total):".formatted(CellStore.MIN_ROW_COUNT), new JSpinner(rowNumber),
+            "Remove columns (%d min total):".formatted(CellStore.MIN_COLUMN_COUNT), new JSpinner(columnNumber)
         };
 
         int option = JOptionPane.showConfirmDialog(null, message, "Shrink table", JOptionPane.OK_CANCEL_OPTION);

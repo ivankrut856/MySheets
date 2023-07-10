@@ -70,7 +70,6 @@ public class EditorTableModel extends AbstractTableModel {
     public void selectionChanged(int rowIndex, int columnIndex) {
         if (rowIndex == selectedRow && columnIndex == selectedColumn)
             return;
-        System.out.println(String.format("SC: %d;%d", rowIndex, columnIndex));
         fireTableCellUpdated(rowIndex, columnIndex);
         fireTableCellUpdated(selectedRow, selectedColumn);
         selectedRow = rowIndex;
@@ -81,7 +80,6 @@ public class EditorTableModel extends AbstractTableModel {
         if (rowIndex < 0 || rowIndex >= getRowCount() || columnIndex < 1 || columnIndex >= getColumnCount())
             return;
 
-        System.out.println("RC: %d;%d".formatted(rowIndex, columnIndex - 1));
         if (cellManager.getValue(new CellAddress(rowIndex, columnIndex - 1)) instanceof NodeValue.Error e) {
             JOptionPane.showMessageDialog(null, e.message(), "Cell's erroneous", JOptionPane.ERROR_MESSAGE);
         }

@@ -14,7 +14,7 @@ import static java.nio.file.StandardOpenOption.*;
 
 public class TablePanel extends JPanel {
 
-    private EditorTableModel tableModel;
+    private final EditorTableModel tableModel;
 
     public TablePanel(int rowCount, int columnCount) {
 
@@ -35,8 +35,8 @@ public class TablePanel extends JPanel {
             public void editingStopped(ChangeEvent e) {
                 super.editingStopped(e);
                 var rowIndex = getSelectedRow() + 1;
-                if (rowIndex >= getRowCount())
-                    rowIndex = 0;
+                if (rowIndex == getRowCount())
+                    rowIndex -= 2;
                 var columnIndex = getSelectedColumn();
                 changeSelection(rowIndex, columnIndex, false, false);
             }
@@ -45,7 +45,7 @@ public class TablePanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() != BUTTON3)
-                    return;;
+                    return;
                 int rowIndex = bodyTable.rowAtPoint(e.getPoint());
                 int columnIndex = bodyTable.columnAtPoint(e.getPoint());
                 tableModel.onRightClick(rowIndex, columnIndex + 1);

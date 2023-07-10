@@ -110,7 +110,7 @@ public class CellManager {
     }
 
     public boolean isAddressInvalid(AstNode.Reference.Address address) {
-        return !cells.isValid(new CellAddress(address));
+        return cells.isInvalid(new CellAddress(address));
     }
 
     public int getRowCount() {

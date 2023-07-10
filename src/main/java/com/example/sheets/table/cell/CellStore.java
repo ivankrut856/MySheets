@@ -6,7 +6,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CellStore {
@@ -20,8 +19,10 @@ public class CellStore {
     private int columnCount;
 
     private final CellWithDependants DEFAULT_CELL;
-    private final int MIN_ROW_COUNT = 2;
-    private final int MIN_COLUMN_COUNT = 2;
+    public static final int MIN_ROW_COUNT = 2;
+    public static final int MIN_COLUMN_COUNT = 2;
+    public static final int MAX_ROW_COUNT = 10000;
+    public static final int MAX_COLUMN_COUNT = 10000;
 
     public CellStore(int rowCount, int columnCount) {
         this.rowCount = rowCount;
@@ -32,7 +33,6 @@ public class CellStore {
     }
 
     public Cell getCell(CellAddress address) {
-        System.out.println("Cell store has %d cells".formatted(data.size() + 1));
         if (data.containsKey(address))
             return data.get(address).cell;
 
@@ -75,8 +75,8 @@ public class CellStore {
         return newCell;
     }
 
-    public boolean isValid(CellAddress address) {
-        return !(address.row() < 0 || address.row() >= rowCount || address.column() < 0 || address.column() >= columnCount);
+    public boolean isInvalid(CellAddress address) {
+        return (address.row() < 0 || address.row() >= rowCount || address.column() < 0 || address.column() >= columnCount);
     }
 
     public Cell set(CellAddress address, String formula) {
@@ -102,7 +102,9 @@ public class CellStore {
 
     public void extend(int rowNumber, int columnNumber) {
         rowCount += rowNumber;
+        rowCount = Math.min(rowCount, MAX_ROW_COUNT);
         columnCount += columnNumber;
+        columnCount = Math.min(columnCount, MAX_COLUMN_COUNT);
     }
 
     public void shrink(int rowNumber, int columnNumber) {
@@ -110,7 +112,7 @@ public class CellStore {
         rowCount = Math.max(rowCount, MIN_ROW_COUNT);
         columnCount -= columnNumber;
         columnCount = Math.max(columnCount, MIN_COLUMN_COUNT);
-        var toRemove = data.keySet().stream().filter(a -> !isValid(a)).toList();
+        var toRemove = data.keySet().stream().filter(this::isInvalid).toList();
         toRemove.forEach(data::remove);
     }
 }
